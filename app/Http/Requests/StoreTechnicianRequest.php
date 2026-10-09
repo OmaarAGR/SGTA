@@ -11,7 +11,7 @@ class StoreTechnicianRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return in_array($this->user()->role, ['admin', 'receptionist']);
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreTechnicianRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'area_of_expertise' => ['required', 'string', 'max:255'],
         ];
     }
 }

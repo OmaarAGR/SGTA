@@ -5,8 +5,8 @@ import { router, Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     appointments: {
-        type: Array,
-        default: () => [],
+        type: Object,
+        default: () => ({ data: [] }),
     },
 });
 

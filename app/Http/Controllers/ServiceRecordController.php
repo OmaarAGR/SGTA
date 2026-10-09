@@ -25,11 +25,11 @@ class ServiceRecordController extends Controller
         ->when($filter_search, function ($q, $filter_search) {
             $q->where('service_performed', 'like', '%' . $filter_search . '%')
             ->orWhere('notes', 'like', '%' . $filter_search . '%')
-            ->orWhereHas('vehicle', function ($q) use ($filter_search) {
+            ->orWhereHas('appointment.vehicle', function ($q) use ($filter_search) {
                 $q->where('license_plate', 'like', '%' . $filter_search . '%');
             });
         })
-        ->with('client') // eager load for efficiency
+        ->with('appointment.vehicle', 'technician.user') // eager load for efficiency
         ->paginate(10)
         ->withQueryString();
 

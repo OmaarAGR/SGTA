@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTechnicianRequest;
 use App\Http\Requests\UpdateTechnicianRequest;
 use App\Models\Technician;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,6 +24,7 @@ class TechnicianController extends Controller
                     $q->where('name', 'like', '%' . $filter_search . '%');
                 });
             })
+            ->with('user')
             ->paginate(10)
             ->withQueryString();
 
@@ -45,7 +47,16 @@ class TechnicianController extends Controller
      */
     public function store(StoreTechnicianRequest $request)
     {
-        $technician = Technician::create($request->validated());
+        $data = $request->validated();
+
+        $user = new User([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ]);
+        $user->role = 'technician'; // role is not mass assignable
+        $user->save();
+        $technician = $user->technician()->create(['area_of_expertise' => $data['area_of_expertise']]);
 
         return to_route('technicians.show', $technician)->with([
             'success' => 'Technician created successfully.',
@@ -57,7 +68,7 @@ class TechnicianController extends Controller
      */
     public function show(Technician $technician)
     {
-        $technician->load(['user', 'appointments.vehicle.client', 'serviceRecords']);
+        $technician->load(['user', 'serviceRecords']);
 
         return Inertia::render('Technicians/Show', [
             'technician' => $technician,
@@ -79,7 +90,14 @@ class TechnicianController extends Controller
      */
     public function update(UpdateTechnicianRequest $request, Technician $technician)
     {
-        $technician->update($request->validated());
+        $data = $request->validated();
+
+        $technician->user->update(array_filter([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'] ?? null,
+        ]));
+        $technician->update(['area_of_expertise' => $data['area_of_expertise']]);
 
         return to_route('technicians.show', $technician)->with([
             'success' => 'Technician updated successfully.',

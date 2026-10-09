@@ -1,14 +1,18 @@
 <script setup>
 import DefaultLayout from '@/Layouts/Default.vue';
 import Table from '@/Components/Table.vue';
+import { router } from '@inertiajs/vue3';
 
 defineProps({
     clients: {
-        type: Array,
+        type: Object,
         required: true,
-        default: () => [],
     },
 });
+
+function softDelete(selected) {
+    selected.forEach(client => router.delete(route('clients.destroy', client.id)));
+}
 </script>
 
 <template>
@@ -19,7 +23,7 @@ defineProps({
                 <Table
                     empty-message="No hay clientes registrados."
                     :headers="['Id', 'Nombre', 'Correo', 'Teléfono', 'Dirección', 'Ciudad', 'Departamento/Estado', 'País', 'Acciones']"
-                    :elements="clients"
+                    :elements="clients.data"
                     :allow-create="true" :allow-edit="true" :allow-soft-delete="true" :allow-delete="false"
                     @create="router.get(route('clients.create'))"
                     @edit="x => router.get(route('clients.edit', x))"

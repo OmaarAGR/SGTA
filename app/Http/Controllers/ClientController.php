@@ -21,6 +21,7 @@ class ClientController extends Controller
                     $q->where('name', 'like', '%' . $filter_search . '%');
                 });
             })
+            ->with('user')
             ->withCount(['vehicles', 'appointments'])
             ->paginate(10)
             ->withQueryString();
@@ -76,7 +77,10 @@ class ClientController extends Controller
      */
     public function update(UpdateClientRequest $request, Client $client)
     {
-        $client->update($request->validated());
+        $data = $request->validated();
+
+        $client->user->update(['name' => $data['name'], 'email' => $data['email']]);
+        $client->update(collect($data)->except(['name', 'email'])->all());
 
         return to_route('clients.show', $client)->with([
             'success' => 'Client updated successfully.',
