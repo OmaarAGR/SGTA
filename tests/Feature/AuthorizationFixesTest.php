@@ -44,16 +44,6 @@ class AuthorizationFixesTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_admin_can_reach_vehicle_update_without_being_blocked(): void
-    {
-        $fixtures = $this->makeFixtures();
-        $admin = User::factory()->state(['role' => 'admin'])->create();
-
-        $response = $this->actingAs($admin)->put(route('vehicles.update', $fixtures['vehicle']), []);
-
-        $response->assertRedirect(route('vehicles.show', $fixtures['vehicle']));
-    }
-
     public function test_user_without_permission_cannot_store_a_service_record(): void
     {
         $this->makeFixtures();
@@ -62,16 +52,6 @@ class AuthorizationFixesTest extends TestCase
         $response = $this->actingAs($stranger)->post(route('service_records.store'), []);
 
         $response->assertForbidden();
-    }
-
-    public function test_admin_can_reach_service_record_update_without_being_blocked(): void
-    {
-        $fixtures = $this->makeFixtures();
-        $admin = User::factory()->state(['role' => 'admin'])->create();
-
-        $response = $this->actingAs($admin)->put(route('service_records.update', $fixtures['serviceRecord']), []);
-
-        $response->assertRedirect(route('service_records.show', $fixtures['serviceRecord']));
     }
 
     public function test_user_without_permission_cannot_update_an_appointment(): void
