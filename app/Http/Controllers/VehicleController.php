@@ -79,7 +79,7 @@ class VehicleController extends Controller
      */
     public function edit(Vehicle $vehicle): Response
     {
-        Gate::authorize('update', Vehicle::class);
+        Gate::authorize('update', $vehicle);
 
         return Inertia::render('Vehicles/Edit', [
             'vehicle' => $vehicle->load('client'),
@@ -91,7 +91,7 @@ class VehicleController extends Controller
      */
     public function update(UpdateVehicleRequest $request, Vehicle $vehicle): RedirectResponse
     {
-        Gate::authorize('update', Vehicle::class);
+        Gate::authorize('update', $vehicle);
 
         $vehicle->update($request->validated());
 
