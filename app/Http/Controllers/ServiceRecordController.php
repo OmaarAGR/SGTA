@@ -60,7 +60,7 @@ class ServiceRecordController extends Controller
 
         $serviceRecord = ServiceRecord::create($request->validated());
 
-        return to_route('service-records.show', $serviceRecord)->with([
+        return to_route('service_records.show', $serviceRecord)->with([
             'success' => 'Service record created successfully.',
         ]);
     }
@@ -101,7 +101,7 @@ class ServiceRecordController extends Controller
 
         $serviceRecord->update($request->validated());
 
-        return to_route('service-records.show', $serviceRecord)->with([
+        return to_route('service_records.show', $serviceRecord)->with([
             'success' => 'Service record updated successfully.',
         ]);
     }
@@ -115,7 +115,7 @@ class ServiceRecordController extends Controller
 
         $serviceRecord->delete();
 
-        return to_route('service-records.index')->with([
+        return to_route('service_records.index')->with([
             'success' => 'Service record deleted successfully.',
         ]);
     }
