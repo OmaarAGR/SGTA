@@ -25,7 +25,13 @@ class StoreServiceRecordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'appointment_id' => ['required', 'exists:appointments,id'],
+            'start_datetime' => ['required', 'date'],
+            'end_datetime' => ['nullable', 'date', 'after_or_equal:start_datetime'],
+            'service_performed' => ['nullable', 'string', 'max:255'],
+            'labor_cost' => ['nullable', 'numeric', 'min:0'],
+            'notes' => ['nullable', 'string'],
+            'technician_id' => ['required', 'exists:technicians,id'],
         ];
     }
 }
