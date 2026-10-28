@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\ServiceRecord;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ServiceRecordPolicy
 {
@@ -21,7 +20,7 @@ class ServiceRecordPolicy
      */
     public function view(User $user, ServiceRecord $serviceRecord): bool
     {
-        return false;
+        return in_array($user->role, ['admin', 'receptionist', 'technician']);
     }
 
     /**
@@ -29,7 +28,7 @@ class ServiceRecordPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return in_array($user->role, ['admin', 'receptionist', 'technician']);
     }
 
     /**
@@ -37,7 +36,7 @@ class ServiceRecordPolicy
      */
     public function update(User $user, ServiceRecord $serviceRecord): bool
     {
-        return false;
+        return in_array($user->role, ['admin', 'receptionist', 'technician']);
     }
 
     /**

@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Appointment;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class AppointmentPolicy
 {
@@ -39,7 +38,8 @@ class AppointmentPolicy
      */
     public function update(User $user, Appointment $appointment): bool
     {
-        return false;
+        return $user->role === 'admin' || $user->role === 'receptionist'
+            || ($user->role === 'client' && $user->id === $appointment->vehicle->client->user_id);
     }
 
     /**
