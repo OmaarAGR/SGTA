@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class UpdateVehicleRequest extends FormRequest
 {
@@ -24,7 +25,11 @@ class UpdateVehicleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'license_plate' => ['required', 'string', 'max:255', Rule::unique('vehicles', 'license_plate')->ignore($this->route('vehicle'))],
+            'make' => ['required', 'string', 'max:255'],
+            'model' => ['required', 'string', 'max:255'],
+            'year' => ['required', 'integer'],
+            'client_id' => ['required', 'exists:clients,id'],
         ];
     }
 }
